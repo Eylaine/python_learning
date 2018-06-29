@@ -6,5 +6,5 @@
 
 from jinja2 import Template
 
-template = Template()
-template.render(name='World')
+template = Template('Hello {{ name}}!')
+print(template.render(name='World'))
