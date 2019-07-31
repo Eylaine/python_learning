@@ -1,2 +1,3 @@
 Jinja2
 watchdog
+python-jenkins
