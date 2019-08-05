@@ -2,4 +2,3 @@ Jinja2
 watchdog
 python-jenkins
 openpyxl
-xmind
