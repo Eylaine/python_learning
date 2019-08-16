@@ -11,4 +11,3 @@ JENKINS_URL = "http://localhost:8080"
 JENKINS_PASSWORD = "admin"
 JENKINS_USERNAME = "admin"
 JENKINS_JOB_NAME = "api.auto"
-
