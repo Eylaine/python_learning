@@ -3,15 +3,13 @@
 # @Author  : Eylaine
 # @File    : xmind2excel.py
 
-import sys
 import xmind
 import time
 from openpyxl import load_workbook
 import shutil
 from os.path import splitext
-import os
 
-"""xmind to excel for teambition"""
+import os
 
 _PATH = os.path.dirname(os.path.abspath(__file__))
 
@@ -20,6 +18,7 @@ template_name = "template.xlsx"
 path_list = list()
 
 _author = "admin"
+first_module = "APP版本"
 
 log_file = "log.txt"
 
@@ -61,6 +60,7 @@ def read_xmind(file_path):
             assert False
         # 有Step表示的节点至倒数第二个为测试步骤
         steps = get_step(step_list[step_index:-1])
+
         # 根节点的第一级子节点到Step前一个节点为标题
         title = get_title(step_list[2:step_index])
         # Sheet名称 + 根节点 + 根节点第一级子节点为分组
@@ -136,6 +136,10 @@ def get_title(title):
     length = len(title)
     result = ""
     for each in title:
+
+        if each[0:5].upper() == "TITLE":
+            result = each[6:]
+            return result
         result = result + each
 
         index = title.index(each)
@@ -153,7 +157,7 @@ def get_group(group):
     :return:
     """
     length = len(group)
-    result = "APP版本|"
+    result = first_module + "|"
     for each in group:
         result = result + each
 
@@ -229,14 +233,51 @@ def copy_template():
 
 
 if __name__ == '__main__':
-    args = sys.argv
-    file_name = args[1]
-    suffix = splitext(file_name)[1]
-    _author = args[2]
+    # args = sys.argv
+    # file_name = args[1]
+    # suffix = splitext(file_name)[1]
+    # _author = args[2]
+    #
+    # if suffix != ".xmind":
+    #     print(u"文件名不正确：" + file_name)
+    # else:
+    #     xmind_data = read_xmind(file_name)
+    #     case_file = copy_template()
+    #     write_excel(xmind_data, case_file)
 
-    if suffix != ".xmind":
-        print(u"文件名不正确：" + file_name)
-    else:
-        xmind_data = read_xmind(file_name)
-        case_file = copy_template()
-        write_excel(xmind_data, case_file)
+    while True:
+        file_name = input("请输入要转换的xmind文件名称：")
+        suffix = splitext(file_name)[1]
+
+        if suffix != ".xmind":
+            print(f"文件名：{file_name} 不正确，请重新输入！")
+            continue
+        else:
+            break
+
+    _author = input("请输入你的名字：")
+
+    # 此处可以修改增加list，后期可作为配置文件读取
+    module_list = ["APP版本", "用户增长"]
+    module_length = len(module_list)
+
+    for item in module_list:
+        print(item + " ==> " + str(module_list.index(item)))
+
+    while True:
+        index = int(input("请选择业务模块（数字）："))
+
+        if index < 0:
+            print("输入值过小：" + str(index))
+            continue
+
+        if index >= module_length:
+            print("输入值过大：" + str(index))
+            continue
+
+        first_module = module_list[index]
+        break
+
+    xmind_data = read_xmind(file_name)
+    case_file = copy_template()
+    write_excel(xmind_data, case_file)
